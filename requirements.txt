@@ -1,4 +1,6 @@
-﻿accelerate==0.34.2
+
+gunicorn==20.1.0
+accelerate==0.34.2
 aiohappyeyeballs==2.4.0
 aiohttp==3.10.5
 aiosignal==1.3.1
