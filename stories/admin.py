@@ -88,9 +88,15 @@ class StoryAdmin(admin.ModelAdmin):
         logger.info(f"Hikaye kaydedildi: {obj.title}")
 
 # Category Admin Paneli
-@admin.register(Category)
 class CategoryAdmin(admin.ModelAdmin):
-    prepopulated_fields = {"slug": ("name",)}
+    list_display = ('name', 'slug', 'seo_description', 'seo_keywords')
+    prepopulated_fields = {'slug': ('name',)}
+    readonly_fields = ('seo_description', 'seo_keywords')  # SEO alanlarını salt okunur yapın
+    
+    def save_model(self, request, obj, form, change):
+        if not obj.seo_description or not obj.seo_keywords:
+            obj.generate_seo_content()
+        super().save_model(request, obj, form, change)
 
 # Comment Admin Paneli
 @admin.register(Comment)

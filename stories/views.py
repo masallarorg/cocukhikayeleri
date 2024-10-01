@@ -343,21 +343,46 @@ def story_detail(request, slug):
 # Kategori detay sayfası
 def category_detail(request, slug):
     category = get_object_or_404(Category, slug=slug)
-    story_list = Story.objects.filter(category=category).order_by('-created_at')
-    
-    # Sayfalama: sayfa başına 6 hikaye göster
-    paginator = Paginator(story_list, 6)
-    page_number = request.GET.get('page')
-    stories = paginator.get_page(page_number)
-    
-    categories = Category.objects.all()  # Navbar'da göstermek için kategoriler
+    stories = Story.objects.filter(category=category)
 
-    return render(request, 'category_detail.html', {
+    # Kategorilerin tümünü al
+    categories = Category.objects.all()
+
+    meta_description = category.meta_description if category.meta_description else f"{category.name} kategorisindeki hikayeleri keşfedin."
+    meta_keywords = category.meta_keywords if category.meta_keywords else f"{category.name}, hikaye, masal, çocuk hikayeleri"
+
+    context = {
         'category': category,
         'stories': stories,
-        'categories': categories
-    })
+        'categories': categories,  # Kategorileri buraya ekledik
+        'meta_description': meta_description,
+        'meta_keywords': meta_keywords,
+    }
+    return render(request, 'category_detail.html', context)
+    category = get_object_or_404(Category, slug=slug)  # slug ile kategoriyi bul
+    stories = Story.objects.filter(category=category)  # Kategorideki hikayeleri al
 
+    # Kategorinin meta alanlarını kullan
+    meta_description = category.meta_description if category.meta_description else f"{category.name} kategorisindeki hikayeleri keşfedin."
+    meta_keywords = category.meta_keywords if category.meta_keywords else f"{category.name}, hikaye, masal, çocuk hikayeleri"
+
+    context = {
+        'category': category,
+        'stories': stories,
+        'meta_description': meta_description,  # Kategorinin açıklaması
+        'meta_keywords': meta_keywords,  # Kategorinin anahtar kelimeleri
+    }
+    return render(request, 'category_detail.html', context)
+    category = get_object_or_404(Category, slug=slug)  # slug ile kategoriyi bul
+    stories = Story.objects.filter(category=category)  # Kategorideki hikayeleri al
+
+    context = {
+        'category': category,
+        'stories': stories,
+        'meta_description': category.meta_description or "Varsayılan açıklama",  # Kategoriye özel açıklama
+        'meta_keywords': category.meta_keywords or "Varsayılan anahtar kelimeler",  # Kategoriye özel anahtar kelimeler
+    }
+    return render(request, 'category_detail.html', context)
 # Yorum silme fonksiyonu
 @login_required
 def delete_comment(request, comment_id):

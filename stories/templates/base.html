@@ -4,14 +4,30 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{% block title %}Çocuk Hikayeleri{% endblock %}</title>
-    <meta name="description" content="{{ story.meta_description }}">
-    <meta name="keywords" content="{{ story.keywords }}">   
-    <meta name="description" content="{{ meta_description }}">
-    <meta name="keywords" content="{{ meta_keywords }}">
+    
+    <!-- SEO Meta Description -->
+    {% if story.meta_description %}
+        <meta name="description" content="{{ story.meta_description }}">
+    {% elif meta_description %}
+        <meta name="description" content="{{ meta_description }}">
+    {% else %}
+        <meta name="description" content="Çocuklar için eğlenceli ve eğitici hikayeler. En iyi masallar ve çocuk hikayeleri burada!">
+    {% endif %}
+    
+    <!-- SEO Meta Keywords -->
+    {% if story.keywords %}
+        <meta name="keywords" content="{{ story.keywords }}">
+    {% elif meta_keywords %}
+        <meta name="keywords" content="{{ meta_keywords }}">
+    {% else %}
+        <meta name="keywords" content="çocuk hikayeleri, eğitici masallar, kısa hikayeler, çocuk kitapları, kısa masallar, masallar, masal oku">
+    {% endif %}
+    
+    <!-- Diğer head elemanlarınız -->
     
  
     
-    <title>{{ story.title }}</title>
+    
     {% load static %} <!-- Statik dosyaları yüklemek için gerekli -->
 
     <!-- Bootstrap CSS -->

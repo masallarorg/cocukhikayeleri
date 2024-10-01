@@ -7,10 +7,54 @@ class Category(models.Model):
     name = models.CharField(max_length=100)
     slug = models.SlugField(unique=True, blank=True)
     description = models.TextField()
+    meta_description = models.TextField(blank=True, null=True)  # Yeni alan
+    meta_keywords = models.TextField(blank=True,)
+
+    def generate_seo_content(self):
+        """Yapay zeka kullanarak SEO açıklaması ve anahtar kelimeler oluşturur."""
+        prompt_description = f"Generate an SEO-friendly meta description for the category '{self.name}' with the following description: '{self.description}'. Ensure it is under 160 characters."
+        prompt_keywords = f"Generate a list of SEO-friendly keywords for the category '{self.name}'. Separate them with commas."
+
+        try:
+            # Meta Description Üretimi
+            response_description = openai.ChatCompletion.create(
+                model="gpt-4-turbo",
+                messages=[
+                    {"role": "system", "content": "Sen bir SEO uzmanısın ve meta açıklamaları oluşturuyorsun."},
+                    {"role": "user", "content": prompt_description}
+                ],
+                max_tokens=60,
+                temperature=0.7,
+            )
+            meta_description = response_description['choices'][0]['message']['content'].strip()
+            meta_description = clean_text(meta_description)[:160]  # 160 karakterle sınırlama
+
+            # Anahtar Kelimeler Üretimi
+            response_keywords = openai.ChatCompletion.create(
+                model="gpt-4-turbo",
+                messages=[
+                    {"role": "system", "content": "Sen bir SEO uzmanısın ve anahtar kelimeler oluşturuyorsun."},
+                    {"role": "user", "content": prompt_keywords}
+                ],
+                max_tokens=60,
+                temperature=0.7,
+            )
+            keywords = response_keywords['choices'][0]['message']['content'].strip()
+            keywords = clean_text(keywords)[:255]  # 255 karakterle sınırlama
+
+            self.seo_description = meta_description
+            self.seo_keywords = keywords
+
+        except Exception as e:
+            # Hata durumunda varsayılan değerler
+            self.seo_description = "Bu kategori, çeşitli konularda içerikler sunmaktadır."
+            self.seo_keywords = "kategori, içerik, örnek"
 
     def save(self, *args, **kwargs):
         if not self.slug:
             self.slug = slugify(self.name)
+        if not self.seo_description or not self.seo_keywords:
+            self.generate_seo_content()
         super().save(*args, **kwargs)
 
     def __str__(self):

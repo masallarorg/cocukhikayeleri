@@ -14,7 +14,7 @@ from io import BytesIO
 
 
 
-openai.api_key = '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'
+openai.api_key = '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'
 
 
 
