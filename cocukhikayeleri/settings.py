@@ -16,7 +16,7 @@ MESSAGE_TAGS = {
 }
 
 # Secret Key (use environment variable for security)
-SECRET_KEY = os.environ.get('PwUpdwBoEoIDhbZtpmURQmOYzEZ-LQmsoBJu-QE6GlrglenZilhdz0xpsxxRsybs74o', 'your-default-secret-key')
+SECRET_KEY = os.environ.get('SECRET_KEY', 'PwUpdwBoEoIDhbZtpmURQmOYzEZ-LQmsoBJu-QE6GlrglenZilhdz0xpsxxRsybs74o')
 
 # Debug mode (set to False in production)
 DEBUG = os.environ.get('DEBUG', 'False') == 'True'
