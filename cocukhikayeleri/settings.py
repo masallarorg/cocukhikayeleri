@@ -3,8 +3,10 @@ from pathlib import Path
 import dj_database_url
 from django.contrib.messages import constants as messages
 
+# Build paths inside the project
 BASE_DIR = Path(__file__).resolve().parent.parent
 
+# Message tags for Bootstrap
 MESSAGE_TAGS = {
     messages.DEBUG: 'alert-info',
     messages.INFO: 'alert-info',
@@ -13,10 +15,16 @@ MESSAGE_TAGS = {
     messages.ERROR: 'alert-danger',
 }
 
+# Secret Key (use environment variable for security)
 SECRET_KEY = os.environ.get('PwUpdwBoEoIDhbZtpmURQmOYzEZ-LQmsoBJu-QE6GlrglenZilhdz0xpsxxRsybs74o', 'your-default-secret-key')
+
+# Debug mode (set to False in production)
 DEBUG = os.environ.get('DEBUG', 'False') == 'True'
+
+# Allowed hosts (include your domain or IP)
 ALLOWED_HOSTS = ['cocukhikayeleri.onrender.com']
 
+# Installed applications
 INSTALLED_APPS = [
     'django.contrib.admin',
     'django.contrib.auth',
@@ -28,6 +36,7 @@ INSTALLED_APPS = [
     'django.contrib.sitemaps',
 ]
 
+# Middleware
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
@@ -38,8 +47,10 @@ MIDDLEWARE = [
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
 
+# URL configuration
 ROOT_URLCONF = 'cocukhikayeleri.urls'
 
+# Templates configuration
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
@@ -57,12 +68,15 @@ TEMPLATES = [
     },
 ]
 
+# WSGI application
 WSGI_APPLICATION = 'cocukhikayeleri.wsgi.application'
 
+# Database configuration using environment variable
 DATABASES = {
     'default': dj_database_url.config(default=os.environ.get('DATABASE_URL'))
 }
 
+# Password validators
 AUTH_PASSWORD_VALIDATORS = [
     {
         'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator',
@@ -78,19 +92,24 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
+# Internationalization settings
 LANGUAGE_CODE = 'tr'
 TIME_ZONE = 'UTC'
 USE_I18N = True
 USE_TZ = True
 
-DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+# Static and media file settings
+STATIC_URL = '/static/'
+STATIC_ROOT = os.path.join(BASE_DIR, 'static')
+
 MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
-STATIC_URL = '/static/'
-STATIC_ROOT = os.path.join(BASE_DIR, 'static')
+# Redirect URLs for login and logout
 LOGOUT_REDIRECT_URL = '/'
 LOGIN_REDIRECT_URL = '/'
+
+# Logging configuration
 LOGGING = {
     'version': 1,
     'disable_existing_loggers': False,
@@ -98,7 +117,7 @@ LOGGING = {
         'file': {
             'level': 'DEBUG',
             'class': 'logging.FileHandler',
-            'filename': 'debug.log',
+            'filename': os.path.join(BASE_DIR, 'debug.log'),  # Logs stored in the project directory
         },
     },
     'loggers': {
@@ -110,6 +129,7 @@ LOGGING = {
     },
 }
 
+# Email settings (read from environment variables)
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 EMAIL_HOST = os.environ.get('EMAIL_HOST', 'smtp.example.com')
 EMAIL_PORT = int(os.environ.get('EMAIL_PORT', 587))
@@ -118,3 +138,6 @@ EMAIL_HOST_USER = os.environ.get('EMAIL_HOST_USER', 'your-email@example.com')
 EMAIL_HOST_PASSWORD = os.environ.get('EMAIL_HOST_PASSWORD', 'your-email-password')
 DEFAULT_FROM_EMAIL = os.environ.get('DEFAULT_FROM_EMAIL', 'your-email@example.com')
 ADMIN_EMAIL = os.environ.get('ADMIN_EMAIL', 'admin@example.com')
+
+# Default primary key field type
+DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
